@@ -1,0 +1,8 @@
+.idea
+venv
+_unused
+*/__pycache__/*
+*.pyc
+.eggs
+blast_ct.egg-info
+blast-ct-env
