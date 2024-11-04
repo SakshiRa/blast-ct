@@ -1,0 +1,4 @@
+[console_scripts]
+blast-ct = blast_ct.console_tool:console_tool
+blast-ct-inference = blast_ct.inference:inference
+blast-ct-train = blast_ct.train:train
