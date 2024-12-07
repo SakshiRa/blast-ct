@@ -38,7 +38,7 @@ this file will also include the volume of lesion per brain region, the volume of
 ### Linux and MacOS
 On a fresh python3 virtual environment install `blast-ct` via
 
-`pip install blast-ct`
+`pip install git+https://github.com/SakshiRa/blast-ct.git`
 
 ### Windows
 If you are using miniconda, create a new conda environment and install PyTorch
@@ -51,7 +51,7 @@ conda install pytorch torchvision cudatoolkit=10.1 -c pytorch
 
 Then install `blast-ct` via
 
-`pip install blast-ct`
+`pip install git+https://github.com/SakshiRa/blast-ct.git`
 
 # Usage with examples
 
@@ -59,7 +59,7 @@ Please run the following in your bash console to obtain an example data that we 
 ```
 mkdir blast-ct-example
 cd blast-ct-example
-svn checkout "https://github.com/biomedia-mira/blast-ct/trunk/blast_ct/data/"
+svn checkout "pip install git+https://github.com/SakshiRa/blast-ct/trunk/blast_ct/data/"
 ```
 
 ## Inference on one image
