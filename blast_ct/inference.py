@@ -8,6 +8,7 @@ from blast_ct.nifti.savers import NiftiPatchSaver
 from blast_ct.read_config import get_model, get_test_loader
 from blast_ct.train import set_device
 from blast_ct.trainer.inference import ModelInference, ModelInferenceEnsemble
+from blast_ct.utils.model_loader import get_model_path
 
 
 def str2bool(v):
@@ -75,8 +76,12 @@ def run_inference(job_dir, test_csv_path, config_file, device, saved_model_paths
 def inference():
     install_dir = os.path.dirname(os.path.realpath(__file__))
     default_config = os.path.join(install_dir, 'data/config.json')
-    saved_model_paths = [os.path.join(install_dir, f'data/saved_models/model_{i:d}.torch_model') for i in range(1, 16)]
-    default_model_paths = ' '.join(saved_model_paths)
+
+    # Build space-separated string for argparse
+    default_model_paths = " ".join(
+        get_model_path(f"model_{i}.torch_model")
+        for i in range(1, 16)
+    )
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--job-dir',
@@ -104,31 +109,26 @@ def inference():
     parser.add_argument('--write-prob-maps',
                         type=str2bool, nargs='?',
                         const=True,
-                        default=False,
-                        help='Whether to write probability maps images to disk')
+                        default=False)
     parser.add_argument('--do-localisation',
                         type=str2bool, nargs='?',
                         const=True,
-                        default=False,
-                        help='Whether to run localisation or not')
+                        default=False)
     parser.add_argument('--num-reg-runs',
                         default=1,
-                        type=int,
-                        help='How many times to run registration between native scan and CT template.')
+                        type=int)
     parser.add_argument('--save-atlas-and-brain-mask-native-space',
                         default=False,
-                        action='store_true',
-                        help='Whether to write the parcellated atlas and brain mask aligned to native space to the disk.')
+                        action='store_true')
     parser.add_argument('--overwrite',
                         type=str2bool, nargs='?',
                         const=True,
-                        default=False,
-                        help='Whether to overwrite run if already exists')
+                        default=False)
     parser.add_argument('--native-space',
                         type=str2bool, nargs='?',
                         const=True,
-                        default=True,
-                        help='Whether to calculate the volumes in native space or atlas space.')
+                        default=True)
+
     parse_args, unknown = parser.parse_known_args()
     run_inference(**parse_args.__dict__)
 

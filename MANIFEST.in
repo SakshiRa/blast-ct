@@ -1,0 +1,4 @@
+prune blast_ct/data/saved_models
+exclude *.torch_model
+exclude *.nii*
+include blast_ct/data/config.json

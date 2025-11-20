@@ -3,6 +3,15 @@
 
 **B**rain **L**esion **A**nalysis and **S**egmentation **T**ool for **C**omputed **T**omography - Version 2.0.0
 
+## 🔧 NOTE: Updated, Installable Fork
+> **This is an updated and fully installable version of BLAST-CT.**  
+> The original repo fails on install due to bundled binaries + outdated packaging.  
+> This fork:  
+> • Works via `pip install blast-ct`  
+> • Downloads models from Hugging Face  
+> • Cleans up inference + training CLI for modern environments
+
+
 This repository provides our deep learning image segmentation tool for traumatic brain injuries in 3D CT scans.
 
 Please consider citing our article when using our software:
@@ -38,7 +47,7 @@ this file will also include the volume of lesion per brain region, the volume of
 ### Linux and MacOS
 On a fresh python3 virtual environment install `blast-ct` via
 
-`pip install git+https://github.com/SakshiRa/blast-ct.git`
+`pip install blast-ct`
 
 ### Windows
 If you are using miniconda, create a new conda environment and install PyTorch
@@ -51,7 +60,23 @@ conda install pytorch torchvision cudatoolkit=10.1 -c pytorch
 
 Then install `blast-ct` via
 
-`pip install git+https://github.com/SakshiRa/blast-ct.git`
+`pip install blast-ct`
+
+Verify the installation by running
+`blast-ct --help`
+
+Pretrained Models (Hosted on Hugging Face)
+Pretrained ensemble models are downloaded automatically on first use from:
+
+- https://huggingface.co/sakshirathi360/blast-ct
+
+Models are cached locally at:
+
+`~/.blastct/models/`
+
+Manual download (optional):
+
+`huggingface-cli download sakshirathi360/blast-ct --include "*.torch_model"`
 
 # Usage with examples
 

@@ -121,31 +121,38 @@ class NaNLoss(Hook):
 
 
 class ModelSaverHook(Hook):
-    def __init__(self, save_every=100, keep_model_every=100):
+    def __init__(self, save_every=100, keep_model_every=100, filename=None):
         super().__init__()
         self.save_every = save_every
         self.keep_model_every = keep_model_every
+        self.filename = filename
 
     @staticmethod
     def save_model_to_disk(model, model_path):
-        if not os.path.exists(os.path.dirname(model_path)):
-            os.makedirs(os.path.dirname(model_path))
+        os.makedirs(os.path.dirname(model_path), exist_ok=True)
         torch.save(model, model_path)
 
     def after_epoch(self):
         epoch = self.model_trainer.current_state['epoch']
         num_epochs = self.model_trainer.current_state['num_epochs']
         is_last_epoch = epoch == num_epochs - 1
+
         if not (epoch % self.save_every == 0 or is_last_epoch) or epoch == 0:
             return
 
         saved_model_dir = os.path.join(self.model_trainer.job_dir, 'saved_models')
 
-        # save current model
-        model_path = os.path.join(saved_model_dir, 'model_' + str(epoch) + '.torch_model')
+        # 🔥 Use custom filename if set, else fallback to epoch-based
+        filename = self.filename or f"model_{epoch}.torch_model"
+        model_path = os.path.join(saved_model_dir, filename)
+
         self.save_model_to_disk(self.model_trainer.model.state_dict(), model_path)
 
-        # delete old models
+        # 🔥 If filename is fixed, do NOT delete models based on epoch
+        if self.filename:
+            return
+
+        # delete old models (epoch mode only)
         for file in os.listdir(saved_model_dir):
             matches = re.findall('(?<=model_)\d+', file)
             for match in matches:
@@ -153,7 +160,6 @@ class ModelSaverHook(Hook):
                 if (previous_epoch % self.keep_model_every != 0 or previous_epoch == 0) and previous_epoch != epoch:
                     os.remove(os.path.join(saved_model_dir, file))
 
-        # if last epoch save last model
-        if is_last_epoch:
-            model_path = os.path.join(saved_model_dir, 'model_last.torch_model')
-            self.save_model_to_disk(self.model_trainer.model.state_dict(), model_path)
+        if is_last_epoch and not self.filename:
+            last_path = os.path.join(saved_model_dir, 'model_last.torch_model')
+            self.save_model_to_disk(self.model_trainer.model.state_dict(), last_path)

@@ -10,9 +10,11 @@ import torch.nn
 from blast_ct.read_config import get_model, get_optimizer, get_loss, get_train_loader, get_valid_loader, \
     get_test_loader, get_training_hooks
 from blast_ct.trainer.model_trainer import ModelTrainer
+from blast_ct.utils.config_loader import get_config
 
 
-def run_job(job_dir, train_csv_path, valid_csv_path, config_file, num_epochs, device, random_seed):
+def run_job(job_dir, train_csv_path, valid_csv_path, config_file,
+            num_epochs, device, random_seed, model_index=None):
     with open(config_file, 'r') as f:
         config = json.load(f)
     if not os.path.exists(job_dir):
@@ -29,6 +31,12 @@ def run_job(job_dir, train_csv_path, valid_csv_path, config_file, num_epochs, de
     optimizer = get_optimizer(config, model)
     criterion = get_loss(config)
     hooks = get_training_hooks(job_dir, config, device, valid_loader, test_loader)
+    # Override naming: save as model_{index}.torch_model instead of model_{epoch}.torch_model
+    if model_index is not None:
+        for h in hooks:
+            from blast_ct.trainer.hooks import ModelSaverHook
+            if isinstance(h, ModelSaverHook):
+                h.filename = f"model_{model_index}.torch_model"
 
     # train the model
     print('Starting Training...')
@@ -60,8 +68,11 @@ def run_ensemble(job_dir, train_csv_path, valid_csv_path, config_file, num_epoch
     if len(np.unique(random_seeds)) != len(random_seeds):
         raise ValueError("Duplicate random seeds were provided.")
 
-    for random_seed in random_seeds:
-        run_dir = os.path.join(job_dir, 'random_seed_' + str(random_seed))
+    for idx, random_seed in enumerate(random_seeds, start=1):
+        run_dir = os.path.join(job_dir, f"model_{idx}")
+        run_job(run_dir, train_csv_path, valid_csv_path, config_file,
+                num_epochs, device, random_seed, model_index=idx)
+
         if os.path.exists(run_dir):
             if overwrite:
                 print('Run already exists, overwriting...')
@@ -78,9 +89,10 @@ def train():
                         type=str,
                         help='Directory for checkpoints, exports, and logs.')
     parser.add_argument('--config-file',
-                        required=True,
+                        default=get_config(),
                         type=str,
-                        help='A json configuration file for the job (see example files)')
+                        help='Path to config file (defaults to packaged JSON).'
+    )
     parser.add_argument('--train-csv-path',
                         required=True,
                         type=str,
