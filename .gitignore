@@ -2,4 +2,4 @@
 venv
 _unused
 */__pycache__/*
-*.pyc
+*.pycblast-ct-env/
