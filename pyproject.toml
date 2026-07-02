@@ -4,14 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "blast_ct"
-version = "5.0.6"
+version = "2.0.0"
 description = "Automatic segmentation of Traumatic Brain Injury (TBI) in Head CT"
 readme = "README.md"
 authors = [
-    { name = "Sakshi Rathi", email = "rathi036@umn.edu" },
-    { name = "Miguel Monteiro", email = "miguel.monteiro@imperial.ac.uk" }
-]
-maintainers = [
+    { name = "Miguel Monteiro", email = "miguel.monteiro@imperial.ac.uk" },
     { name = "Sakshi Rathi", email = "rathi036@umn.edu" }
 ]
 requires-python = ">=3.8"

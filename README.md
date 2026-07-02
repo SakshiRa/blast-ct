@@ -3,15 +3,6 @@
 
 **B**rain **L**esion **A**nalysis and **S**egmentation **T**ool for **C**omputed **T**omography - Version 2.0.0
 
-## 🔧 NOTE: Updated, Installable Fork
-> **This is an updated and fully installable version of BLAST-CT.**  
-> The original repo fails on install due to bundled binaries + outdated packaging.  
-> This fork:  
-> • Works via `pip install blast-ct`  
-> • Downloads models from Hugging Face  
-> • Cleans up inference + training CLI for modern environments
-
-
 This repository provides our deep learning image segmentation tool for traumatic brain injuries in 3D CT scans.
 
 Please consider citing our article when using our software:
@@ -66,9 +57,7 @@ Verify the installation by running
 `blast-ct --help`
 
 Pretrained Models (Hosted on Hugging Face)
-Pretrained ensemble models are downloaded automatically on first use from:
-
-- https://huggingface.co/sakshirathi360/blast-ct
+Pretrained ensemble models are downloaded automatically on first use from Hugging Face Hub.
 
 Models are cached locally at:
 
@@ -76,7 +65,9 @@ Models are cached locally at:
 
 Manual download (optional):
 
-`huggingface-cli download sakshirathi360/blast-ct --include "*.torch_model"`
+`huggingface-cli download <org>/blast-ct --include "*.torch_model"`
+
+> **Note for maintainers:** the model weights are currently hosted at a temporary location pending transfer to a repository under biomedia org control.
 
 # Usage with examples
 
@@ -84,7 +75,7 @@ Please run the following in your bash console to obtain an example data that we 
 ```
 mkdir blast-ct-example
 cd blast-ct-example
-svn checkout "https://github.com/SakshiRa/blast-ct/trunk/blast_ct/data/"
+svn checkout "https://github.com/biomedia-mira/blast-ct/trunk/blast_ct/data/"
 ```
 
 ## Inference on one image

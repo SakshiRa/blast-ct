@@ -59,10 +59,6 @@ def run_inference(job_dir, test_csv_path, config_file, device, saved_model_paths
                             extra_output_names=extra_output_names, do_localisation=do_localisation,
                             num_reg_runs=num_reg_runs, native_space=native_space,
                             write_registration_info=save_atlas_and_brain_mask_native_space)
-
-    # saver = NiftiPatchSaver(job_dir, test_loader, write_prob_maps=write_prob_maps,
-    #                         extra_output_names=extra_output_names, do_localisation=do_localisation,
-    #                         num_reg_runs=num_reg_runs, native_space=native_space)
     saved_model_paths = saved_model_paths.split()
     n_models = len(saved_model_paths)
     task = config['data']['task']
@@ -109,25 +105,32 @@ def inference():
     parser.add_argument('--write-prob-maps',
                         type=str2bool, nargs='?',
                         const=True,
-                        default=False)
+                        default=False,
+                        help='Write probability maps for each lesion class alongside the segmentation output.')
     parser.add_argument('--do-localisation',
                         type=str2bool, nargs='?',
                         const=True,
-                        default=False)
+                        default=False,
+                        help='Calculate the volume of lesion per brain region using linear registration.')
     parser.add_argument('--num-reg-runs',
                         default=1,
-                        type=int)
+                        type=int,
+                        help='Number of registration runs between native scan and CT template. '
+                             'Running more than once avoids initialisation errors (best run is kept).')
     parser.add_argument('--save-atlas-and-brain-mask-native-space',
                         default=False,
-                        action='store_true')
+                        action='store_true',
+                        help='Save the atlas and brain mask in native (input image) space.')
     parser.add_argument('--overwrite',
                         type=str2bool, nargs='?',
                         const=True,
-                        default=False)
+                        default=False,
+                        help='Overwrite existing job-dir. Set False to resume a previously started run.')
     parser.add_argument('--native-space',
                         type=str2bool, nargs='?',
                         const=True,
-                        default=True)
+                        default=True,
+                        help='Return output segmentation in the native space of the input image.')
 
     parse_args, unknown = parser.parse_known_args()
     run_inference(**parse_args.__dict__)

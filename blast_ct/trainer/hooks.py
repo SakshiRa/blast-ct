@@ -142,13 +142,13 @@ class ModelSaverHook(Hook):
 
         saved_model_dir = os.path.join(self.model_trainer.job_dir, 'saved_models')
 
-        # 🔥 Use custom filename if set, else fallback to epoch-based
+        # Use custom filename if set, else fallback to epoch-based
         filename = self.filename or f"model_{epoch}.torch_model"
         model_path = os.path.join(saved_model_dir, filename)
 
         self.save_model_to_disk(self.model_trainer.model.state_dict(), model_path)
 
-        # 🔥 If filename is fixed, do NOT delete models based on epoch
+        # If filename is fixed, do NOT delete models based on epoch
         if self.filename:
             return
 

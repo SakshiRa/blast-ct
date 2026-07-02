@@ -55,7 +55,7 @@ def get_model_path(filename, expected_sha256=None):
 
     print(f"[blast_ct] Downloading model: {filename}…")
 
-    # 🔥 FIX: enforce binary download mode
+    # enforce binary download mode via ?download=1 parameter
     url = f"{BASE_URL}{filename}?download=1"
 
     _download(url, dest)
