@@ -84,7 +84,7 @@ Please run the following in your bash console to obtain an example data that we 
 ```
 mkdir blast-ct-example
 cd blast-ct-example
-svn checkout "pip install git+https://github.com/SakshiRa/blast-ct/trunk/blast_ct/data/"
+svn checkout "https://github.com/SakshiRa/blast-ct/trunk/blast_ct/data/"
 ```
 
 ## Inference on one image
