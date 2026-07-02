@@ -67,7 +67,10 @@ Manual download (optional):
 
 `huggingface-cli download <org>/blast-ct --include "*.torch_model"`
 
-> **Note for maintainers:** the model weights are currently hosted at a temporary location pending transfer to a repository under biomedia org control.
+> **Note for maintainers:** the model hosting location can be changed without a code release by setting the `BLAST_CT_MODEL_URL` environment variable, or by updating the `_HUGGINGFACE_URL` / `_GITHUB_RELEASE_URL` constants in `blast_ct/utils/model_loader.py`. By default models are downloaded from HuggingFace; to use GitHub Releases instead, set:
+> ```bash
+> export BLAST_CT_MODEL_URL="https://github.com/biomedia-mira/blast-ct/releases/download/v2.0.0/"
+> ```
 
 # Usage with examples
 

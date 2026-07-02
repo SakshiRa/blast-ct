@@ -1,11 +1,16 @@
 import hashlib
+import os
 import pathlib
 import requests
 import sys
 import tempfile
 
-# allow direct file downloads, not HTML viewer pages
-BASE_URL = "https://huggingface.co/sakshirathi360/blast-ct/resolve/main/"
+# Model weight hosting locations.
+# Override at runtime via the BLAST_CT_MODEL_URL environment variable.
+_HUGGINGFACE_URL = "https://huggingface.co/sakshirathi360/blast-ct/resolve/main/"
+_GITHUB_RELEASE_URL = "https://github.com/biomedia-mira/blast-ct/releases/download/v2.0.0/"
+
+BASE_URL = os.environ.get("BLAST_CT_MODEL_URL", _HUGGINGFACE_URL)
 
 def _sha256(path):
     h = hashlib.sha256()
@@ -55,8 +60,11 @@ def get_model_path(filename, expected_sha256=None):
 
     print(f"[blast_ct] Downloading model: {filename}…")
 
-    # enforce binary download mode via ?download=1 parameter
-    url = f"{BASE_URL}{filename}?download=1"
+    # HuggingFace requires ?download=1 to serve raw bytes; other hosts do not
+    if "huggingface.co" in BASE_URL:
+        url = f"{BASE_URL}{filename}?download=1"
+    else:
+        url = f"{BASE_URL}{filename}"
 
     _download(url, dest)
 
